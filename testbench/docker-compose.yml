@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: performance_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd
+      MYSQL_DATABASE: performance_test
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - performance_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pabcd"]
+      timeout: 5s
+      retries: 10
+      interval: 10s
+      start_period: 30s
+
+  express-server:
+    build: 
+      context: ./express-server
+    container_name: performance_express
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=abcd
+      - DB_NAME=performance_test
+      - NODE_ENV=production
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - performance_network
+    restart: unless-stopped
+
+  go-server:
+    build: 
+      context: ./go-server
+    container_name: performance_go
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=abcd
+      - DB_NAME=performance_test
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - performance_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  performance_network:
+    driver: bridge
