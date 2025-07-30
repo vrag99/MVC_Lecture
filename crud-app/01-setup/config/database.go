@@ -19,14 +19,15 @@ func InitDatabase() error {
 	}
 
 	// Get database connection details from environment
-	dbHost := os.Getenv("DBHOST")
-	dbUser := os.Getenv("DBUSER")
-	dbPassword := os.Getenv("DBPASSWORD")
-	database := os.Getenv("DATABASE")
+	dbHost := os.Getenv("MYSQL_HOST")
+	dbUser := os.Getenv("MYSQL_USER")
+	dbPassword := os.Getenv("MYSQL_PASSWORD")
+	database := os.Getenv("MYSQL_DATABASE")
+	dbPort := os.Getenv("MYSQL_PORT")
 
 	// Create connection string
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
-		dbUser, dbPassword, dbHost, database)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		dbUser, dbPassword, dbHost, dbPort, database)
 
 	// Open database connection
 	DB, err = sql.Open("mysql", dsn)
