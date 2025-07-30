@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"crud-app/pkg/models"
 	"encoding/json"
 	"fmt"
-	"crud-app/models"
 	"net/http"
 	"strconv"
 	"strings"
@@ -163,4 +163,4 @@ func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		"message": fmt.Sprintf("User with id %d deleted successfully", id),
 	}
 	json.NewEncoder(w).Encode(response)
-} 
+}

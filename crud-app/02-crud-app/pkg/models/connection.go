@@ -1,9 +1,10 @@
-package config
+package models
 
 import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -35,12 +36,26 @@ func InitDatabase() (*sql.DB, error) {
 		return nil, fmt.Errorf("error opening database: %v", err)
 	}
 
+	// Configure connection pool settings
+	DB.SetMaxOpenConns(25)                 // Maximum number of open connections
+	DB.SetMaxIdleConns(5)                  // Maximum number of idle connections
+	DB.SetConnMaxLifetime(5 * time.Minute) // Maximum lifetime of a connection
+
 	// Test the connection
 	err = DB.Ping()
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to database: %v", err)
 	}
 
-	fmt.Println("hey db is connected!")
+	fmt.Println("Database connected successfully!")
 	return DB, nil
+}
+
+// CloseDatabase closes the database connection
+func CloseDatabase() error {
+	if DB != nil {
+		fmt.Println("Closing database connection...")
+		return DB.Close()
+	}
+	return nil
 }

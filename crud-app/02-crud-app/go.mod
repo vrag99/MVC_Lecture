@@ -1,6 +1,8 @@
 module crud-app
 
-go 1.22.5
+go 1.23.0
+
+toolchain go1.23.11
 
 require (
 	github.com/go-sql-driver/mysql v1.9.3

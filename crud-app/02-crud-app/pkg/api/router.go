@@ -1,28 +1,18 @@
-package main
+package api
 
 import (
-	"basic-requests/config"
-	"basic-requests/controllers"
+	"crud-app/pkg/controllers"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World")
-}
-
-func main() {
-	_, err := config.InitDatabase()
-	if err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
-	}
-
+// SetupRouter configures and returns a new router with all API routes
+func SetupRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	// Initialize UserController
+	// Initialize controllers
 	userController := controllers.NewUserController()
 
 	// Define routes
@@ -33,6 +23,16 @@ func main() {
 	router.HandleFunc("/users/update/{id}", userController.UpdateUser).Methods("PUT")
 	router.HandleFunc("/users/delete/{id}", userController.DeleteUser).Methods("DELETE")
 
+	return router
+}
+
+// homeHandler handles the root endpoint
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World")
+}
+
+// PrintRoutes prints all available routes for debugging
+func PrintRoutes() {
 	fmt.Println("Server listening on http://localhost:8787")
 	fmt.Println("Available endpoints:")
 	fmt.Println("  GET  /")
@@ -41,9 +41,4 @@ func main() {
 	fmt.Println("  POST /users/add")
 	fmt.Println("  PUT  /users/update/{id}")
 	fmt.Println("  DELETE /users/delete/{id}")
-
-	serverErr := http.ListenAndServe(":8787", router)
-	if serverErr != nil {
-		fmt.Printf("Error starting server: %v\n", serverErr)
-	}
 }
