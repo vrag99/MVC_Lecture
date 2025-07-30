@@ -8,14 +8,7 @@
    go mod tidy
    ```
 
-2. Create `.env` file with database credentials:
-
-   ```
-   DBHOST=localhost:3306
-   DBUSER=your_username
-   DBPASSWORD=your_password
-   DATABASE=test_db
-   ```
+2. `cp .env.sample .env`
 
 3. Set up the MySQL database using the SQL file:
 
@@ -28,4 +21,4 @@
    go run main.go
    ```
 
-The server will start on http://localhost:5000
+The server will start on http://localhost:8787

@@ -13,6 +13,6 @@ func main() {
 
 	config.InitDatabase()
 
-	fmt.Println("Server listening on http://localhost:5000")
-	http.ListenAndServe(":5000", nil)
+	fmt.Println("Server listening on http://localhost:8787")
+	http.ListenAndServe(":8787", nil)
 }
