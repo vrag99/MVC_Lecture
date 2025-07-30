@@ -12,6 +12,8 @@ import (
 
 var DB *sql.DB
 
+// * NOTE: When you actually do your assignment, make utility loaders and a config package for env references.
+
 func InitDatabase() (*sql.DB, error) {
 	// Load environment variables
 	err := godotenv.Load()
